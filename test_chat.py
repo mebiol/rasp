@@ -20,13 +20,14 @@ def transcribe_mic():
                 with mic as source:
 #                       recog.adjust_for_ambient_noise(source,duration=2)
 #                       recog.energy_threshold = 4000
-
 #                       audio = recog.listen(source)
                         audio = recog.listen(source,timeout=3,phrase_time_limit=15)
                 try:
                         print("processing...")
                         text = recog.recognize_google(audio,language='th-TH')
-                        response = openai.ChatCompletion.create(model="gpt-3.5-turbo",messages = [{"role":"user","cont>
+                        response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                                messages = [{"role":"user",
+                                                                "content":f"{text}"}])
                         res_txt = response.choices[0].messages.content
                         print(res_txt)
                         sound = gTTS(text=res_text,lang=lan,slow=False)
