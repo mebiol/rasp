@@ -9,6 +9,8 @@ lan = 'th'
 
 def transcribe_mic():
     with mic as source:
+        print("Adjusting for ambient noise...")
+        recog.adjust_for_ambient_noise(source, duration=1)
         print("Listening for speech...")
         try:
             audio = recog.listen(source, timeout=3)
