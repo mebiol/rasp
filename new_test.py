@@ -17,10 +17,10 @@ def transcribe_mic():
     while True:
         print('Listening...')
         with mic as source:
-            recog.adjust_for_ambient_noise(source, duration=2)
+#            recog.adjust_for_ambient_noise(source, duration=2)
             recog.energy_threshold = 4000
             try:
-                audio = recog.listen(source, timeout=3, phrase_time_limit=15)
+                audio = recog.listen(source, timeout=3)
             except sr.WaitTimeoutError:
                 print('No audio detected. Waiting...')
                 continue
@@ -34,12 +34,12 @@ def transcribe_mic():
             print("Recognized text:", text)
 
             # Send the text to OpenAI GPT-3.5 Turbo
-            response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": text}])
-            res_text = response.choices[0].message['content']
-            print("Response from GPT-3:", res_text)
+#            response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": text}])
+#            res_text = response.choices[0].message['content']
+#            print("Response from GPT-3:", res_text)
 
             # Convert response to speech
-            sound = gTTS(text=res_text, lang=lan, slow=False)
+            sound = gTTS(text=text, lang=lan, slow=False)
             sound.save('test.mp3')
             os.system('cvlc --play-and-exit test.mp3')
 

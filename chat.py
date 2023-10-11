@@ -16,7 +16,7 @@ while True:
         print(text)
         sound = gTTS(text=text, lang=lan, slow=False)
         sound.save('test.mp3')
-        os.system('test.mp3')
+        os.system('cvlc --play-and-exit test.mp3')
     except sr.WaitTimeoutError:
         print("Recognition timed out")
     except Exception as e:
