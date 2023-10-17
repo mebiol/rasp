@@ -1,11 +1,16 @@
 import speech_recognition as sr
 from gtts import gTTS
 import os
+import requests
+from bardapi import Bard 
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
 recog = sr.Recognizer()
 lan = 'th'
+
+res = requests.get("http://192.168.1.106:5000/api")
+data = res.json()
 
 def transcribe_mic():
     while True:
@@ -16,7 +21,9 @@ def transcribe_mic():
                 print("Listening for speech...")
                 audio = recog.listen(source, timeout=3)
                 text = recog.recognize_google(audio, language='th-TH')
-                print(text)
+		bard = Bard(token=data['msg'])
+		result = bard.get_answer(text)['content']
+                print(result)
                 sound = gTTS(text=text, lang=lan, slow=False)
                 sound.save('test.mp3')
                 os.system('cvlc --play-and-exit test.mp3')
