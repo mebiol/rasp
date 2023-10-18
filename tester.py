@@ -3,11 +3,8 @@ from gtts import gTTS
 import os
 import requests
 from bardapi import Bard
-<<<<<<< HEAD
 import time
 import re
-=======
->>>>>>> facfcae0e3f7ab74305589ff8f1cba8893cf58c7
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
@@ -26,7 +23,7 @@ def transcribe_mic(msg):
                 recog.adjust_for_ambient_noise(source, duration=1)
                 print("Listening for speech...")
                 start_time = time.time()
-                audio = recog.listen(source, timeout=3)
+                audio = recog.listen(source, timeout=1)
                 text = recog.recognize_google(audio,language='th-TH')
                 end_time = time.time()
                 time_taken = (end_time - start_time)*1000
@@ -55,7 +52,7 @@ def transcribe_mic(msg):
         except AssertionError:
             print("No audio source available. Waiting for an audio source...")
         except Exception as e:
-            print(f"An error occurred: {str(e}")
+            print(f"An error occurred: {str(e)}")
 
 def main():
     transcribe_mic(msg)
