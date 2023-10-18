@@ -3,8 +3,11 @@ from gtts import gTTS
 import os
 import requests
 from bardapi import Bard
+<<<<<<< HEAD
 import time
 import re
+=======
+>>>>>>> facfcae0e3f7ab74305589ff8f1cba8893cf58c7
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
@@ -50,12 +53,13 @@ def transcribe_mic(msg):
         except sr.WaitTimeoutError:
             print("Recognition timed out")
         except AssertionError:
-            print("No audio source available. Waiting for audio source...")
+            print("No audio source available. Waiting for an audio source...")
         except Exception as e:
-            print(f"An error occurred: {str(e)}")
+            print(f"An error occurred: {str(e}")
 
 def main():
     transcribe_mic(msg)
 
 if __name__ == "__main__":
     main()
+
