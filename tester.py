@@ -5,8 +5,7 @@ from bardapi import Bard
 import time
 import re
 from io import BytesIO
-from pydub import AudioSegment
-from pydub.playback import play
+import os
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
@@ -34,7 +33,7 @@ def transcribe_mic(msg):
 
                 bard = Bard(token=msg)
                 start_time = time.time()
-                result = bard.get_answer(text)['content']
+                result=bard.get_answer(f"{text}โดยให้ Bard เปลี่ยนบทบาทเป็นคุณหมอหญิงที่มีอายุ 30ปี ใจดี อายุกรรมและตอบแบบสรุปให้สั้นมากที่สุดเท่าที่ทำได้ โดยวิธีการพิมต้องไม่เกิน 3 บรรทัด")['content']
                 cln = re.sub(r'\([^)]*\)|\*|\:|\ๆ', '', result)
                 end_time = time.time()
                 time_taken = (end_time - start_time) * 1000
@@ -42,12 +41,12 @@ def transcribe_mic(msg):
                 print(cln)
 
                 start_time = time.time()
-                tts = gTTS(text=cln, lang=lan, slow=False)
-                audio = AudioSegment.from_file(BytesIO(tts.save('test.mp3')), format="mp3")  # Specify the file name
-                play(audio)
+                sound = gTTS(text=cln, lang=lan, slow=False)
                 end_time = time.time()
-                time_taken = (end_time - start_time) * 1000
-                print(f'text to speech: {time_taken:.2f} ms')
+                sound.save('test.mp3')
+                os.system('cvlc --play-and-exit test.mp3')
+                time_taken = (end_time - start_time)*1000
+                print(f'text to speech :{time_taken:2f} ms')
 
         except sr.WaitTimeoutError:
             print("Recognition timed out")
