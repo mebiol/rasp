@@ -19,5 +19,5 @@ def api():
 
 if __name__ == '__main__':
     # Change the host from 'localhost' to '0.0.0.0' to allow access from any device on the network.
-    app.run(debug=True, host='192.168.1.52', port=5001)
+    app.run(debug=True, host='192.168.1.44', port=5001)
  
