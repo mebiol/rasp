@@ -5,7 +5,7 @@ ip = 'wlan0'
 if ip in ni.interfaces():
 	name = ni.ifaddresses(ip).get(ni.AF_INET)
 	if name:
-		ip_address = ip[0]['addr']
+		ip_address = name[0]['addr']
 		print(ip_address)
 	else:
 		print(f"no ip found{ip}")
