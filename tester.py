@@ -11,7 +11,7 @@ mic = sr.Microphone(1)
 recog = sr.Recognizer()
 lan = 'th'
 
-res = requests.get("http://192.168.1.52:5001/api")
+res = requests.get("http://192.168.1.44:5001/api")
 data = res.json()
 msg = data['msg']
 
@@ -23,7 +23,7 @@ def transcribe_mic(msg):
                 recog.adjust_for_ambient_noise(source, duration=1)
                 print("Listening for speech...")
                 start_time = time.time()
-                audio = recog.listen(source, timeout=1)
+                audio = recog.listen(source, timeout=2)
                 text = recog.recognize_google(audio,language='th-TH')
                 end_time = time.time()
                 time_taken = (end_time - start_time)*1000
