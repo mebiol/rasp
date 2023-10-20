@@ -1,11 +1,12 @@
 from flask import Flask, jsonify
 import browser_cookie3
+import socket
 
 app = Flask(__name__)
 
 @app.route('/api', methods=['GET'])
 def api():
-    # Your existing code to get secure_1psid_cookie44444444444444 
+    # Your existing code to get secure_1psid_cookie
     url = 'https://bard.google.com/'
     cj = browser_cookie3.firefox()
     secure_1psid_cookie = None
@@ -18,6 +19,6 @@ def api():
     return jsonify({'msg': secure_1psid_cookie})
 
 if __name__ == '__main__':
-    # Change the host from 'localhost' to '0.0.0.0' to allow access from any device on the network.
-    app.run(debug=True, host='192.168.1.44', port=5001)
- 
+    # Get the local IP address of the machine
+    host = socket.gethostbyname(socket.gethostname())
+    app.run(debug=True, host=host, port=5001)
