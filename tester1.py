@@ -11,7 +11,7 @@ mic = sr.Microphone(1)
 recog = sr.Recognizer()
 lan = 'th'
 
-res = requests.get("http://192.168.1.44:5001/api")
+res = requests.get("http://192.168.1.36:5001/api")
 data = res.json()
 msg = data['msg']
 

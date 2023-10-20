@@ -5,7 +5,6 @@ from bardapi import Bard
 import time
 import re
 import os
-import playsound
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
@@ -43,9 +42,8 @@ def transcribe_mic(msg):
                 start_time = time.time()
                 sound = gTTS(text=cln, lang=lan, slow=False)
                 end_time = time.time()
-                playsound.playsound(sound)
-#                sound.save('test.mp3')
-#                os.system('cvlc --play-and-exit test.mp3')
+                sound.save('test.mp3')
+                os.system('cvlc --play-and-exit test.mp3')
                 time_taken = (end_time - start_time)*1000
                 print(f'text to speech :{time_taken:2f} ms')
 
