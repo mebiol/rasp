@@ -5,13 +5,17 @@ from bardapi import Bard
 import time
 import re
 import os
+import pygame.mixer
+from io import BytesIO
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
 recog = sr.Recognizer()
 lan = 'th'
 
-res = requests.get("http://192.168.1.44:5001/api")
+pygame.mixer.init()
+
+res = requests.get("http://192.168.1.41:5001/api")
 data = res.json()
 msg = data['msg']
 
@@ -41,9 +45,16 @@ def transcribe_mic(msg):
 
                 start_time = time.time()
                 sound = gTTS(text=cln, lang=lan, slow=False)
+                mp3_fp = BytesIO()
+                sound.save(mp3_fp)
+                mp3_fp.seek(0)
+                pygame.mixer.music.load(mp3_fp)
+                pygame.mixer.music.play()
+                while pygame.mixer.music.get_busy():
+                       continue
                 end_time = time.time()
-                sound.save('test.mp3')
-                os.system('cvlc --play-and-exit test.mp3')
+#                sound.save('test.mp3')
+#                os.system('cvlc --play-and-exit test.mp3')
                 time_taken = (end_time - start_time)*1000
                 print(f'text to speech :{time_taken:2f} ms')
 
