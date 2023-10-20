@@ -7,7 +7,6 @@ app = Flask(__name__)
 @app.route('/api', methods=['GET'])
 def api():
     # Your existing code to get secure_1psid_cookie
-    url = 'https://bard.google.com/'
     cj = browser_cookie3.firefox()
     secure_1psid_cookie = None
 
