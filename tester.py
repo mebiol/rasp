@@ -3,7 +3,6 @@ from gtts import gTTS
 import requests
 from bardapi import Bard
 import time
-import re
 import os
 import pygame.mixer
 from io import BytesIO
@@ -36,15 +35,16 @@ def transcribe_mic(msg):
 
                 bard = Bard(token=msg)
                 start_time = time.time()
-                result=bard.get_answer(f"{text}โดยให้ Bard เปลี่ยนบทบาทเป็นคุณหมอหญิงที่มีอายุ 30ปี ใจดี อายุกรรมและตอบแบบสรุปให้สั้นมากที่สุดเท่าที่ทำได้ โดยวิธีการพิมต้องไม่เกิน 3 บรรทัด")['content']
-                cln = re.sub(r'\([^)]*\)|\*|\:|\ๆ', '', result)
+                result = bard.get_answer(f"ลองนึกภาพคุณเป็นหมออายุ 30 ปีผู้ใจดี ตอบคำถามต่อไปนี้ให้สั้น 2 บรรทัด{text}")['content']
+                cln = result.split('\n')
+                clns = clns[0]
                 end_time = time.time()
                 time_taken = (end_time - start_time) * 1000
                 print(f'Bard API: {time_taken:.2f} ms')
-                print(cln)
+                print(clns)
 
                 start_time = time.time()
-                sound = gTTS(text=cln, lang=lan, slow=False)
+                sound = gTTS(text=clns, lang=lan, slow=False)
                 sound.save('test.mp3')
                 os.system('cvlc --play-and-exit test.mp3')
                 time_taken = (end_time - start_time)*1000
