@@ -36,7 +36,7 @@ def transcribe_mic(msg):
 
                 bard = Bard(token=msg)
                 start_time = time.time()
-                result=bard.get_answer(f"{text}โดยให้ Bard เปลี่ยนบทบาทเป็นคุณหมอหญิงที่มีอายุ 30ปี ใจดี อายุกรรมและตอบแบบสรุปให้สั้นมากที่สุดเท่าที่ทำได้ โดยวิธีการพิมต้องไม่เกิน 3 บรรทัด")['content']
+                result=bard.get_answer(f"{text}โดยให้ Bard เป็นคุณหมอหญิงที่มีอายุ 30ปี ใจดี อายุกรรม โดยข้อบังคับคือห้ามอธิบายเกิน 2 บรรทัดจบ")['content']
                 cln = re.sub(r'\([^)]*\)|\*|\:|\ๆ', '', result)
                 end_time = time.time()
                 time_taken = (end_time - start_time) * 1000
