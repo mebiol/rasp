@@ -15,7 +15,7 @@ lan = 'th'
 
 pygame.mixer.init()
 
-res = requests.get("http://192.168.1.41:5001/api")
+res = requests.get("http://192.168.1.102:5001/api")
 data = res.json()
 msg = data['msg']
 
