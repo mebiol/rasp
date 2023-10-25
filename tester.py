@@ -15,6 +15,8 @@ data = res.json()
 msg = data['msg']
 
 def transcribe_mic(msg):
+    first_time = True  # Declare the flag
+
     while True:
         try:
             with mic as source:
@@ -28,10 +30,17 @@ def transcribe_mic(msg):
                 time_taken = (end_time - start_time) * 1000
                 print(f'speech to text: {time_taken:.2f} ms')
                 print(text)
+                
+                # Check if it's the first time speaking, if so, include the prefix
+                if first_time:
+                    query = f"ลองนึกภาพคุณเป็นหมออายุ 30 ปีผู้ใจดี เพศหญิง ตอบคำถามต่อไปนี้ให้สั้น 2 บรรทัด{text}"
+                    first_time = False
+                else:
+                    query = text
 
                 bard = Bard(token=msg)
                 start_time = time.time()
-                result = bard.get_answer(f"ลองนึกภาพคุณเป็นหมออายุ 30 ปีผู้ใจดี เพศหญิง ตอบคำถามต่อไปนี้ให้สั้น 2 บรรทัด{text}")['content']
+                result = bard.get_answer(query)['content']
                 cln = result.split('\n')
                 clns = cln[0]
                 end_time = time.time()
