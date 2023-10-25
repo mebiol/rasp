@@ -35,6 +35,7 @@ def transcribe_mic(msg):
 
                 if count == 0:
                     result = bard.get_answer(f"ลองนึกภาพคุณเป็นหมออายุ 30 ปีผู้ใจดี เพศหญิง ตอบคำถามต่อไปนี้ให้สั้น 2 บรรทัด{text}")['content']
+                    print(result)
                 else:
                     result = bard.get_answer(text)['content']
                 cln = result.split('\n')
