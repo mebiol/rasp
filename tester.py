@@ -15,7 +15,7 @@ data = res.json()
 msg = data['msg']
 
 def transcribe_mic(msg):
-    count = 0
+    count = 0  # Initialize the count variable
     while True:
         try:
             with mic as source:
@@ -33,11 +33,14 @@ def transcribe_mic(msg):
                 bard = Bard(token=msg)
                 start_time = time.time()
 
+                # Check if it's the first time, if so, include the prefix
                 if count == 0:
                     result = bard.get_answer(f"ลองนึกภาพคุณเป็นหมออายุ 30 ปีผู้ใจดี เพศหญิง ตอบคำถามต่อไปนี้ให้สั้น 2 บรรทัด{text}")['content']
                     print(result)
+                    count += 1  # Increment the count
                 else:
                     result = bard.get_answer(text)['content']
+
                 cln = result.split('\n')
                 clns = cln[0]
                 end_time = time.time()
@@ -57,10 +60,11 @@ def transcribe_mic(msg):
         except AssertionError:
             print("No audio source available. Waiting for an audio source...")
         except requests.ConnectionError as e:
-            print(f"Connetion error occured:{e}")
+            print(f"Connection error occurred:{e}")
             msg=None
         except Exception as e:
             print(f"An error occurred: {str(e)}")
+
 
 def main():
     transcribe_mic(msg)
