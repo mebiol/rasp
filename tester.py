@@ -10,7 +10,7 @@ mic = sr.Microphone(1)
 recog = sr.Recognizer()
 lan = 'th'
 
-res = requests.get("http://192.168.1.35:5001/api")
+res = requests.get("http://192.168.1.38:5001/api")
 data = res.json()
 msg = data['msg']
 
@@ -50,6 +50,9 @@ def transcribe_mic(msg):
             print("Recognition timed out")
         except AssertionError:
             print("No audio source available. Waiting for an audio source...")
+        except requests.ConnectionError as e:
+            print(f"Connetion error occured:{e}")
+            msg=None
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
