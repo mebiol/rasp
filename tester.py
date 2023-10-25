@@ -41,7 +41,7 @@ def transcribe_mic(msg):
                 else:
                     result = bard.get_answer(text)['content']
 
-                cln = result.split('\n')
+                cln = result.split('\n') 
                 clns = cln[0]
                 end_time = time.time()
                 time_taken = (end_time - start_time) * 1000
