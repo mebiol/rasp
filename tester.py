@@ -31,7 +31,7 @@ def transcribe_mic(msg):
 
                 bard = Bard(token=msg)
                 start_time = time.time()
-                result = bard.get_answer(f"ลองนึกภาพคุณเป็นหมออายุ 30 ปีผู้ใจดี ตอบคำถามต่อไปนี้ให้สั้น 2 บรรทัด{text}")['content']
+                result = bard.get_answer(f"ลองนึกภาพคุณเป็นหมออายุ 30 ปีผู้ใจดี เพศหญิง ตอบคำถามต่อไปนี้ให้สั้น 2 บรรทัด{text}")['content']
                 cln = result.split('\n')
                 clns = cln[0]
                 end_time = time.time()
