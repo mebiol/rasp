@@ -14,7 +14,7 @@ def api():
         if cookie.name == '__Secure-1PSID':
             secure_1psid_cookie = cookie.value
             break
-
+        
     return jsonify({'msg': secure_1psid_cookie})
 
 if __name__ == '__main__':
