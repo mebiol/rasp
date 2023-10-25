@@ -62,6 +62,7 @@ def transcribe_mic(msg):
             print(f"An error occurred: {str(e)}")
 
 
+
 def main():
     transcribe_mic(msg)
 
