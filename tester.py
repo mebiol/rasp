@@ -14,8 +14,8 @@ res = requests.get("http://192.168.1.38:5001/api")
 data = res.json()
 msg = data['msg']
 
-def transcribe_mic(msg):
-    count = 0  # Initialize the count variable
+def transcribe_mic(msg): 
+    count = 0  # Initialize the count variable 
     while True:
         try:
             with mic as source:
@@ -28,8 +28,7 @@ def transcribe_mic(msg):
                 end_time = time.time()
                 time_taken = (end_time - start_time) * 1000
                 print(f'speech to text: {time_taken:.2f} ms')
-                print(text)
-
+                print(text) 
                 bard = Bard(token=msg)
                 start_time = time.time()
 
@@ -39,17 +38,14 @@ def transcribe_mic(msg):
                     print(result)
                     count += 1  # Increment the count
                 else:
-                    result = bard.get_answer(text)['content']
-
-                cln = result.split('\n') 
-                clns = cln[0]
+                    result = bard.get_answer(text)['content'] 
                 end_time = time.time()
                 time_taken = (end_time - start_time) * 1000
                 print(f'Bard API: {time_taken:.2f} ms')
-                print(clns)
+                #print(clns)
 
                 start_time = time.time()
-                sound = gTTS(text=clns, lang=lan, slow=False)
+                sound = gTTS(text=result, lang=lan, slow=False)
                 sound.save('test.mp3')
                 os.system('cvlc --play-and-exit test.mp3')
                 time_taken = (end_time - start_time)*1000
