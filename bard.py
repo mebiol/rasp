@@ -23,19 +23,24 @@ for cookie in cj:
         break
 
 while True:
+   try:
     with mic as source:
         print("Listening for speech...")
+        recog.adjust_for_ambient_noise(source, duration=1)
         audio = recog.listen(source)
-    try:
         text = recog.recognize_google(audio, language='th-TH')
+
         bard = Bard(token=secure_1psid_cookie)
-        result = bard.get_answer(text)['content']
-        cleaned_text = re.sub(r'\([^)]*\)|\*|\:|\ๆ', '', result)
+        result = bard.get_answer(f"You are a kind female doctor names Tanya. Respond to the following: {text} Explain the most important way you can help me. The answer should be no more than 20 words.")['content']
+        cleaned_text = re.sub(r'\([^)]*\)|\*|\:|\ๆ|[a-zA-Z]', '', result)
         print(cleaned_text)
+
         sound = gTTS(text=cleaned_text)
         sound.save('exam.mp3')
         os.system('cvlc --play-and-exit exam.mp3')
-    except sr.WaitTimeoutError:
+   except sr.WaitTimeoutError:
         print("Recognition timed out")
-    except Exception as e:
+   except Exception as e:
         print(f"An error occurred: {str(e)}")
+   except AssertionError:
+        print("No audio source available. pls waiting for source audio")
