@@ -8,7 +8,7 @@ app = Flask(__name__)
 def api():
     # Your existing code to get secure_1psid_cookie
     cj = browser_cookie3.firefox()
-    secure_1psid_cookie = None
+    secure_1psid_cookie = None 
 
     for cookie in cj:
         if cookie.name == '__Secure-1PSID':
