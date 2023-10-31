@@ -2,10 +2,8 @@ import speech_recognition as sr
 from gtts import gTTS
 import requests
 from bardapi import Bard
-import time
 import os
 import re
-
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
@@ -15,7 +13,10 @@ lan = 'th'
 res = requests.get("http://192.168.1.42:5001/api")
 data = res.json()
 msg = data['msg']
+Apikey = 'd42uuQuLvWm13dAjiBmgFkdFPpsnPzvL'
 
+chosen_system = input("Choose TTS system (vaja/google): ")
+chosen_mode = None if chosen_system == "google" else input('Select mode in 0-4: ')
 
 def listen_and_transcribe():
     with mic as source:
@@ -26,6 +27,38 @@ def listen_and_transcribe():
         text = recog.recognize_google(audio, language='th-TH')
         return text
 
+def synth_vaja(data):
+    url = 'https://api.aiforthai.in.th/vaja9/synth_audiovisual'
+    headers = {'Apikey': Apikey, 'Content-Type': 'application/json'}
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+def google_tts(text, lang):
+    sound = gTTS(text=text, lang=lang, slow=False)
+    sound.save('test.mp3')
+    os.system('cvlc --play-and-exit test.mp3')
+
+def ask_tts_system(text, lang):
+    global chosen_system, chosen_mode
+
+    if chosen_system == 'vaja':
+        if chosen_mode == '1':
+            data = {'input_text': text, 'speaker': 1, 'phrase_break': 0, 'audiovisual': 0}
+        elif chosen_mode == '2':
+            data = {'input_text': text, 'speaker': 2, 'phrase_break': 0, 'audiovisual': 0}
+        elif chosen_mode == '3':
+            data = {'input_text': text, 'speaker': 3, 'phrase_break': 0, 'audiovisual': 0}
+        elif chosen_mode == '4':
+            data = {'input_text': text, 'speaker': 4, 'phrase_break': 0, 'audiovisual': 0}
+        else:
+            print("Invalid mode for Vaja. Defaulting to mode 1.")
+            data = {'input_text': text, 'speaker': 1, 'phrase_break': 0, 'audiovisual': 0}
+        return synth_vaja(data)
+    elif chosen_system == 'google':
+        return google_tts(text, lang)
+    else:
+        print("Unknown TTS system. Defaulting to Google.")
+        return google_tts(text, lang)
 
 def generate_bard_response(text, token):
     bard = Bard(token=token)
@@ -33,23 +66,26 @@ def generate_bard_response(text, token):
     cleaned_result = re.sub(r'\([^)]*\)|\*|\:', '', result)
     return cleaned_result
 
-
-def text_to_speech(text, lang):
-    sound = gTTS(text=text, lang=lang, slow=False)
-    sound.save('test.mp3')
-    os.system('cvlc --play-and-exit test.mp3')
-
-
 def transcribe_mic(msg):
+    global chosen_system, chosen_mode
+
     while True:
         try:
             transcribed_text = listen_and_transcribe()
             print(transcribed_text)
 
+            ask_tts_system('กรุณารอสักครู่', lan)
+
             response = generate_bard_response(transcribed_text, msg)
             print(response)
 
-            text_to_speech(response, lan)
+            ask_tts_system(response, lan)
+
+            # At the end of the loop, ask if the user wants to change the TTS system or mode:
+            change_system = input("Do you want to change the TTS system? (yes/no): ").lower()
+            if change_system == 'yes':
+                chosen_system = input("Choose TTS system (vaja/google): ")
+                chosen_mode = None if chosen_system == "google" else input('Select mode in 0-4: ')
 
         except sr.WaitTimeoutError:
             print("Recognition timed out")
@@ -61,11 +97,8 @@ def transcribe_mic(msg):
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
-
-
 def main():
     transcribe_mic(msg)
-
 
 if __name__ == "__main__":
     main()
