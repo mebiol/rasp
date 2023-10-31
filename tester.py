@@ -4,6 +4,8 @@ import requests
 from bardapi import Bard
 import os
 import re
+import IPython
+
 
 # Initialize PyAudio and SpeechRecognition
 mic = sr.Microphone(1)
@@ -25,12 +27,21 @@ def listen_and_transcribe():
         print("Listening for speech...")
         audio = recog.listen(source, timeout=2)
         text = recog.recognize_google(audio, language='th-TH')
-        return text
+        return text 
 
 def synth_vaja(data):
     url = 'https://api.aiforthai.in.th/vaja9/synth_audiovisual'
     headers = {'Apikey': Apikey, 'Content-Type': 'application/json'}
     response = requests.post(url, json=data, headers=headers)
+    resp = requests.get(response.json()['wav_url'],headers={'Apikey':Apikey})
+    if resp.status_code == 200:
+        with open('test.wav', 'wb') as a:
+            a.write(resp.content)
+            print('Downloaded: ')
+            IPython.display.display(IPython.display.Audio('test.wav'))
+            os.system('cvlc --play-and-exit test.wav')
+    else:
+            print(resp.reason)
     return response.json()
 
 def google_tts(text, lang):
