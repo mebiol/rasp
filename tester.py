@@ -75,6 +75,7 @@ def generate_bard_response(text, token):
     bard = Bard(token=token)
     result = bard.get_answer(f"You are a kind female doctor named Tanya. Respond to the following: {text} Explain the most important way you can help me. The answer should be no more than 20 words.")['content']
     cleaned_result = re.sub(r'\([^)]*\)|\*|\:', '', result)
+    print(cleaned_result)
     return cleaned_result
 
 def transcribe_mic(msg):
