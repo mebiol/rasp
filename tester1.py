@@ -40,10 +40,11 @@ def transcribe_mic(msg):
                 print(cln)
 
                 start_time = time.time()
-                sound = gTTS(text=cln, lang=lan, slow=False)
+                audio = bard.speech(cln)
+                with open('test1.ogg','wb') as f:
+                    f.write(bytes(audio['audio']))
                 end_time = time.time()
-                sound.save('test.mp3')
-                os.system('cvlc --play-and-exit test.mp3')
+                os.system('cvlc --play-and-exit test1.ogg')
                 time_taken = (end_time - start_time)*1000
                 print(f'text to speech :{time_taken:2f} ms')
 
