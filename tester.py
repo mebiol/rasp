@@ -43,7 +43,7 @@ def synth_vaja(data, name):
                 a.write(resp.content)
                 print('Downloaded: ')
                 IPython.display.display(IPython.display.Audio(f'{name}.wav'))
-                os.system(f'cvlc --play-and-exit {name}.wav')
+                #os.system(f'cvlc --play-and-exit {name}.wav')
                 status = False 
    
         else:
@@ -54,7 +54,7 @@ def synth_vaja(data, name):
 def google_tts(text, lang, name):
     sound = gTTS(text=text, lang=lang, slow=False)
     sound.save(f'{name}.mp3')
-    os.system(f'cvlc --play-and-exit {name}.mp3')
+    #os.system(f'cvlc --play-and-exit {name}.mp3')
 
 def ask_tts_system(text, lang, name):
     global chosen_system, chosen_mode
@@ -84,22 +84,30 @@ def generate_bard_response(text, token):
     cleaned_result = re.sub(r'\([^)]*\)|\*|\:', '', result)
     return cleaned_result
 
+def play(chosen_system,name):
+    if chosen_system =='vaja':
+        os.system(f'cvlc --play-and-exit {name}.wav')
+    elif chosen_system == 'google':
+        os.system(f'cvlc --play-and-exit {name}.mp3')   
+
 def transcribe_mic(msg):
     global chosen_system, chosen_mode
     ask_tts_system('กรุณารอสักครู่', lan,'zwait')
+    play(chosen_system,'zwait')
+    ask_tts_system('มีอะไรถามเพิ่มเติมไหม', lan,'zagain')
+    ask_tts_system('สวัสดี ฉันเป็นผู้ช่วยด้านสุขภาพ อยากรู้อะไรถามได้เลยนะ', lan,'zrespond')
+    play(chosen_system,'zrespond')
     while True:
         try:
             transcribed_text = listen_and_transcribe()
             print(transcribed_text)
-            if chosen_system =='vaja':
-                os.system(f'cvlc --play-and-exit wait.wav')
-            elif chosen_system == 'google':
-                os.system(f'cvlc --play-and-exit wait.mp3')   
+            play(chosen_system,'zwait')
             response = generate_bard_response(transcribed_text, msg)
             print(response)
 
             ask_tts_system(response, lan ,'zrespond')
-
+            play(chosen_system,'zrespond')
+            play(chosen_system,'zagain')
             # # At the end of the loop, ask if the user wants to change the TTS system or mode:
             # change_system = input("Do you want to change the TTS system? (yes/no): ").lower()
             # if change_system == 'yes':
