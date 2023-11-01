@@ -42,7 +42,7 @@ def listen_and_transcribe():
         text = recog.recognize_google(audio, language='th-TH')
         return text
 
-def synth_vaja(data, name, max_retries=5):
+def synth_vaja(data, name, max_retries=10):
     url = 'https://api.aiforthai.in.th/vaja9/synth_audiovisual'
     headers = {'Apikey': Apikey, 'Content-Type': 'application/json'}
     
@@ -54,8 +54,8 @@ def synth_vaja(data, name, max_retries=5):
             if 'wav_url' not in response.json():
                 print("Error: 'wav_url' not found in the response!")
                 return None
-            
-            status = True
+            else:
+                status = True
             while status:
                 resp = requests.get(response.json()['wav_url'], headers={'Apikey': Apikey})
                 if resp.status_code == 200:
@@ -64,16 +64,18 @@ def synth_vaja(data, name, max_retries=5):
                         print('Downloaded: ')
                         IPython.display.display(IPython.display.Audio(f'{name}.wav'))
                         status = False 
+                        return response.json()
                 else:
+                    print('----------------------------')
                     print(resp.reason)
-            return response.json() 
+                    time.sleep(0.1)  # Exponential backoff
 
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 429 and i < max_retries - 1:
-                print("Rate limit exceeded. Retrying...")
-                time.sleep(2 ** i)  # Exponential backoff
+                print(f"Rate limit exceeded. Retrying... {i}")
+                time.sleep(0.1)  # Exponential backoff
             else:
-                print(f"Error occurred: {e}")
+                print(f"Error occurred synth_vaja: {e}")
                 return None
 
 
@@ -103,19 +105,21 @@ def generate_bard_response(text, token):
 
 def transcribe_mic(secure_1psid_cookie):
     global chosen_system, chosen_mode
-    ask_tts_system('กรุณารอสักครู่', lan, 'wait')
-    ask_tts_system('สวัสดี', lan, 'again')
-    play_sound(chosen_system,'wait')
-    play_sound(chosen_system,'again')    
+    ask_tts_system('กรุณารอสักครู่', lan, 'zwait')
+    play_sound(chosen_system,'zwait')
+    ask_tts_system('มีอะไรอยากถามเพิ่มเติมไหม', lan, 'zagain')
+    ask_tts_system('สวัสดี ฉันคือคุณหมอทันย่า อยากถามอะไรไหม', lan, 'zrespond')
+    play_sound(chosen_system,'zrespond')    
     while True:
         try:
             transcribed_text = listen_and_transcribe()
             print(transcribed_text)
-            play_sound(chosen_system, 'wait')
+            play_sound(chosen_system, 'zwait')
             response = generate_bard_response(transcribed_text, secure_1psid_cookie)
             print(response)
             ask_tts_system(response, lan, 'zrespond')
             play_sound(chosen_system,'zrespond')
+            play_sound(chosen_system,'zagain')  
         except sr.WaitTimeoutError:
             print("Recognition timed out")
         except AssertionError:
@@ -131,3 +135,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+      
