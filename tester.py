@@ -39,7 +39,9 @@ def listen_and_transcribe():
         recog.adjust_for_ambient_noise(source, duration=1)
         print("Listening for speech...")
         audio = recog.listen(source, timeout=2)
+        print("recog listen")
         text = recog.recognize_google(audio, language='th-TH')
+        print("recog google")
         return text
 
 def synth_vaja(data, name, max_retries=10):
