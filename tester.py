@@ -23,8 +23,8 @@ for cookie in cj:
 
 Apikey = 'd42uuQuLvWm13dAjiBmgFkdFPpsnPzvL'
 
-chosen_system = input("Choose TTS system (vaja/google): ")
-chosen_mode = None if chosen_system == "google" else input('Select mode in 0-4: ')
+chosen_system = 'vaja'
+chosen_mode = 0
 
 def play_sound(chosen_system, name):
     """Play the sound based on the chosen system and filename."""
