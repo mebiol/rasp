@@ -1,6 +1,7 @@
 import re
 import requests
 import json
+import os
 
 def is_english(text):
     return not bool(re.search('[\u0E00-\u0E7F]', text))
@@ -43,7 +44,13 @@ def api(data):
 
     response = response.json()
 
-    print(response['output'])
+    print(response['output'][0])
+    uri = response['output'][0]
+    filename = uri.split('/')[-1]
+    r = requests.get(uri, allow_redirects=True)
+    open(filename, 'wb').write(r.content)
+
+
 
 data = input("Enter your prompt: ")
 
@@ -52,6 +59,7 @@ if data:
     if not is_english(data):
         data = translate(data)
     print(data)
-    #api(data)
+    api(data)
+
 else:
     print("No input provided!")

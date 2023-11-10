@@ -41,6 +41,8 @@ for i in sentences:
         cleaned_text = cleaned_text.replace('คุณหมอหญิง','')
     if 'คำตอบ' in cleaned_text or 'นอกจาก' in cleaned_text or 'มีประสิทธิภาพ' in cleaned_text or 'ซักประวัติ' in cleaned_text or 'สาเหตุของโรค' in cleaned_text or 'วิธีต่อไปนี้' in cleaned_text or 'คำแนะนำเพิ่มเติม' in cleaned_text or 'ดังนี้' in cleaned_text :
         continue
+    if cleaned_text is not   i:
+        print('hi')
     # if 'วินิจฉัย' in cleaned_text and 'ตรวจ' in cleaned_text:
     #     continue
     if len(cleaned_text) > 55:

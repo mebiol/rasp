@@ -1,8 +1,8 @@
 import speech_recognition as sr
 from gtts import gTTS
 import requests
-import browser_cookie3
-from bardapi import Bard
+# import browser_cookie3
+# from bardapi import Bard
 import os
 import re
 import time
@@ -13,13 +13,13 @@ mic = sr.Microphone(1)
 recog = sr.Recognizer()
 lan = 'th'
 
-cj = browser_cookie3.firefox()
-secure_1psid_cookie = None
+# cj = browser_cookie3.firefox()
+# secure_1psid_cookie = None
 
-for cookie in cj:
-    if cookie.name == '__Secure-1PSID':
-        secure_1psid_cookie = cookie.value
-        break
+# for cookie in cj:
+#     if cookie.name == '__Secure-1PSID':
+#         secure_1psid_cookie = cookie.value
+#         break
 
 Apikey = 'd42uuQuLvWm13dAjiBmgFkdFPpsnPzvL'
 
@@ -99,13 +99,22 @@ def ask_tts_system(text, lang, name):
         print("Unknown TTS system. Defaulting to Google.")
         return google_tts(text, lang, name)
 
-def generate_bard_response(text, token):
-    bard = Bard(token=token)
-    result = bard.get_answer(f"You are a kind female doctor named Tanya. Respond to the following: {text} Explain the most important way you can help me. The answer should be no more than 20 words.")['content']
-    cleaned_result = re.sub(r'\([^)]*\)|\*|\:', '', result)
-    return cleaned_result
+# def generate_bard_response(text, token):
+#     bard = Bard(token=token)
+#     result = bard.get_answer(f"You are a kind female doctor named Tanya. Respond to the following: {text} Explain the most important way you can help me. The answer should be no more than 20 words.")['content']
+#     cleaned_result = re.sub(r'\([^)]*\)|\*|\:', '', result)
+#     return cleaned_result
+def generate_wangchan(text):
+    url ='http://192.168.1.35:5001/data'
+    data = {'msg': text}  # Corrected to create a dictionary with a string value
+    headers = {'Content-Type': 'application/json'}
+    res = requests.post(url, json=data, headers=headers)
+    print('---------------')
+    print("Status Code:", res.status_code)
+    print("Response Text:", res.text)
+    return res.text
 
-def transcribe_mic(secure_1psid_cookie):
+def transcribe_mic():
     global chosen_system, chosen_mode
     ask_tts_system('กรุณารอสักครู่', lan, 'zwait')
     play_sound(chosen_system,'zwait')
@@ -117,7 +126,7 @@ def transcribe_mic(secure_1psid_cookie):
             transcribed_text = listen_and_transcribe()
             print(transcribed_text)
             play_sound(chosen_system, 'zwait')
-            response = generate_bard_response(transcribed_text, secure_1psid_cookie)
+            response = generate_wangchan(transcribed_text)
             print(response)
             ask_tts_system(response, lan, 'zrespond')
             play_sound(chosen_system,'zrespond')
@@ -128,12 +137,11 @@ def transcribe_mic(secure_1psid_cookie):
             print("No audio source available. Waiting for an audio source...")
         except requests.ConnectionError as e:
             print(f"Connection error occurred:{e}")
-            secure_1psid_cookie = None
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
 def main():
-    transcribe_mic(secure_1psid_cookie)
+    transcribe_mic()
 
 if __name__ == "__main__":
     main()
